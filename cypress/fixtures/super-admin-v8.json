@@ -1,0 +1,10 @@
+{
+    "carrier": {
+        "name": "Cypress Carrier",
+        "description": "Automated with Cypress."
+    },
+    "pricePlan": {
+        "name":"Cypress Carrier",
+        "description": "Description goes here."
+    }
+}
