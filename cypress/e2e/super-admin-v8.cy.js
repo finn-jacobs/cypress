@@ -1,7 +1,6 @@
 describe('Super Admin v8', () => {
     
     beforeEach(() => {
-        // cy.task('clearBrowserCache');
         cy.clearLocalStorage();
     })
 
