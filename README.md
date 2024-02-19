@@ -5,7 +5,7 @@ The goal of this project is to build a rudimentary testing suite to automate tas
 # Setup
 - Install Cypress v13.6.4
 - Clone this repo
-- Create .env file with the following contents:
+- Create `.env` file with the following contents:
 ```
 BASE_URL=http://example_domain.mobilepricecards.com
 USER_EMAIL=example_email@mobilepricecard.com
