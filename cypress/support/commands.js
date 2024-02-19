@@ -15,9 +15,9 @@ Cypress.Commands.add('login', () => {
 
 Cypress.Commands.add('openNav', () => {
     cy.get('#nav-text-collapse > ul.navbar-nav.align-items-center.ml-md-auto > li.nav-item.d-xl-none', {timeout: 10000}).click();
-})
+});
 
 Cypress.Commands.add('getPage', (pageName) => {
     cy.openNav();
     cy.get(`a[href="#/${pageName}"]`).click().wait(500);
-})
+});
