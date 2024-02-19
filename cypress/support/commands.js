@@ -1,13 +1,3 @@
-Cypress.Commands.add('disableCache', () => {
-    cy.clearCookies();
-    cy.clearLocalStorage();
-    cy.intercept('*', (req) => {
-        req.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
-        req.headers['Pragma'] = 'no-cache';
-        req.headers['Expires'] = '0';
-    });
-})
-
 Cypress.Commands.add('login', () => {
     cy.visit(Cypress.env('BASE_URL'));
 
