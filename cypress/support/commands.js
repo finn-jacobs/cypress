@@ -1,9 +1,9 @@
 Cypress.Commands.add('login', () => {
-    cy.visit(Cypress.env('BASE_URL'));
+    cy.visit(Cypress.env('BASE_URL')).wait(500);
 
     // Check if already logged in
-    cy.location('href').then((currentUrl) => {
-        if (currentUrl === Cypress.env('https://dev-w0f53seg.us.auth0.com')) {
+    cy.location().then((loc) => {
+        if (loc === null) {
             cy.origin('https://dev-w0f53seg.us.auth0.com', () => {
                 cy.get('#email').type(Cypress.env('USER_EMAIL'));
                 cy.get('#password').type(Cypress.env('USER_PASSWORD'));
