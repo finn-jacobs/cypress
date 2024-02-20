@@ -1,5 +1,5 @@
-describe('template spec', () => {
-    it('passes', () => {
+describe('ou report download', () => {
+    it('should download an OU Report and confirm the download was received', () => {
       cy.login();
 
       cy.intercept('GET', `${Cypress.env('BASE_URL')}/Dashboard/OULevelExport`).as('downloadRequest');
@@ -10,6 +10,9 @@ describe('template spec', () => {
       // Wait for the download request to complete
       cy.wait('@downloadRequest').then((interception) => {
         expect(interception.response.statusCode).to.equal(200); // Check if the response status code is 200 (OK)
+
+        // TODO Neka look back into this
+        cy.log(interception.response)
       });
 
     })
