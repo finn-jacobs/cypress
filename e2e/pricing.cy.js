@@ -59,15 +59,44 @@ describe('pricing testing', () => {
             expect(message).to.equal('Product Static added successfully');
           });
 
-          // <td aria-colindex="2" role="cell" class="">Cypress Carrier</td>
-          
+    });
+
+    it('should upload a file and a new product should be created', () => {
+        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success')
+            .contains('Upload Product').click();
+
+        const filePath = '/Users/anneikaweeks/Desktop/Automation/cypress/assets/sample_product.xlsx';
+
+        cy.get('label[for="importfile"]').selectFile(filePath);
+
+        cy.get('button.btn.btn-primary').click();
+
+        cy.on('window:alert', (message) => {
+        expect(message).to.equal('1 product record(s) added successfully');
+        });
+    
+    });
+
+    it('should check that both new products have red dots on the price card column', () => {
+        // Login to Phoenix
+        cy.login();
+
+        // Navigate to Pricing Page
+        cy.getPage('ProductStatic');
+        
+        // Select the last two elements
+        // check their CSS properties
+        cy.get('i.fas.fa-circle').then($elements => {
+            const lastTwoElements = $elements.slice(-2);
+            cy.wrap(lastTwoElements).should('have.css', 'color', 'rgb(255, 0, 0)');
+        });
     });
 
     it('should download all pricing', () => {
       cy.login();
 
-      // Navigate to Carrier
-         cy.getPage('ProductStatic');
+      // Navigate to 
+      cy.getPage('ProductStatic');
 
       cy.intercept('GET', `${Cypress.env('BASE_URL')}/Analytics/genratePriceList`).as('downloadRequest');
 
@@ -80,8 +109,13 @@ describe('pricing testing', () => {
 
         // TODO Neka look back into this
         cy.log(interception.response)
+        })
 
     });
 
-    })
+    it('should create ', () => {
+
+
+
+    });
 })
