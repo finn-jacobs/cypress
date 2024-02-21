@@ -11,8 +11,8 @@ Cypress.Commands.add('login', () => {
     cy.location().then((loc) => {
         if (loc === null) {
             cy.origin('https://dev-w0f53seg.us.auth0.com', () => {
-                cy.get('#email').type(Cypress.env('USER_EMAIL'));
-                cy.get('#password').type(Cypress.env('USER_PASSWORD'));
+                cy.get('#email').type(Cypress.env('SIGN_IN_EMAIL'));
+                cy.get('#password').type(Cypress.env('SIGN_IN_PASSWORD'));
                 cy.get('#btn-login').click();
             });
         }

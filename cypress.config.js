@@ -11,8 +11,9 @@ module.exports = defineConfig({
     testIsolation: false,
     env: {
       BASE_URL: process.env.BASE_URL,
-      USER_EMAIL: process.env.USER_EMAIL,
-      USER_PASSWORD: process.env.USER_PASSWORD,
+      SIGN_IN_EMAIL: process.env.SIGN_IN_EMAIL,
+      SIGN_IN_PASSWORD: process.env.SIGN_IN_PASSWORD,
+      NEW_USER_EMAIL: process.env.NEW_USER_EMAIL
     }
   },
 });
