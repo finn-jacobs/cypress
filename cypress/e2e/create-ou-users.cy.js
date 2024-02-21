@@ -7,11 +7,14 @@ describe('test', () => {
         // Open add user modal
         cy.get('div.card-header.text-center > div > div.col-md-5.center-content.align-right > div > button').click();
         
+        // Add timestamp to email for new user
+        const email = generateUniqueEmail(Cypress.env('NEW_USER_EMAIL'));
+
         // Fill form
         cy.fixture('super-admin-v8').then(data => {
             cy.get('#DBA2').type(data.ou.user.name);
             cy.handleDropdown('#ouSelect', data.ou.name);
-            cy.get('#name2').type(data.ou.user.email);
+            cy.get('#name2').type(email);
             cy.get('#DBA1').type(data.ou.user.phone);
             cy.get('#name').type(data.ou.user.password);
             cy.get('#DBA3').type(data.ou.user.password);
@@ -27,3 +30,12 @@ describe('test', () => {
         });
     });
 });
+
+function generateUniqueEmail(email) {
+    const dateTime = new Date().toISOString()
+        .replace(/\.\d+Z$/, '')
+        .replace(/T/, '-') 
+        .replace(/:/g, '-');
+    const [address, domain] = email.split('@');
+    return `${address}+${dateTime}@${domain}`;
+}
