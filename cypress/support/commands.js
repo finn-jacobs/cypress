@@ -50,8 +50,10 @@ Cypress.Commands.add('getPage', (route) => {
 Cypress.Commands.add('handleDropdown', (selector, value) => {
     cy.get(selector).then($select => {
         const $options = $select.find(`option`).filter((i, el) => {
-            return el.textContent === value;
+            const textContent = el.textContent.trim().replace(/\s+/g, ' ');
+            return textContent === value;
         });
+        console.log($options);
         if ($options.length > 0) {
             const valueOfFirstMatch = $options.first().val();
             cy.wrap($select).select(valueOfFirstMatch).should('have.value', valueOfFirstMatch);
