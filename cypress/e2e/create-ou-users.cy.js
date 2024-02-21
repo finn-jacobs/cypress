@@ -27,5 +27,3 @@ describe('test', () => {
         });
     });
 });
-
-// http://alf.mobilepricecards.com/Users/addUser
