@@ -25,7 +25,6 @@
         ],
         "user": {
             "name": "Cypress User",
-            "email": "finn.jacobs+1234567@mobilepricecard.com",
             "phone": "1234567890",
             "password": "!Password123",
             "group": "OU Administrator"
