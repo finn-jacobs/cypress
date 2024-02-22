@@ -96,17 +96,38 @@ describe('pricing testing', () => {
         cy.get('td[aria-colindex="2"][role="cell"]').contains('Cypress Carrier').click();
         cy.wait(1000)
         cy.get('button.btn.base-button.btn-outline-default').contains('Add').click();
+
+        const today = new Date();
+        const twoDaysFromNow = new Date(today);
+        twoDaysFromNow.setDate(today.getDate() + 2);
+
+        // choose 2 dates - today and 2 days from today in calendars
         cy.get('label#example-datepicker__value_').then($label => {
             // Click on the label to open the date picker
             cy.wrap($label).click();
-      
-            const today = new Date();
-            const futureDate = new Date(today);
-            futureDate.setDate(today.getDate() + 2);
-            const chosenDate = futureDate.toISOString().split('T')[0];
+            const chosenDate = today.toISOString().split('T')[0];
       
             // Update the label content with the chosen date
-            cy.wrap($label).invoke('text', today);
+            cy.wrap($label).invoke('text', chosenDate);
+          });
+
+          cy.get('label#timeExpires__value_').then($label => {
+            const formattedDate = twoDaysFromNow.toISOString().split('T')[0];
+            cy.wrap($label).invoke('text', formattedDate);
+          });
+
+        // fill out the rest of the form then press save
+        // TODO: TEST ONCE YOUVE SETUP A CORRECT CYPRESS TEST PRODUCT
+          cy.get('select#pricingPlanID').select('Cypress Price Plan');
+          cy.get('input#planpricename').type('Cypress Test');
+          cy.get('label#isDefault').click();
+          cy.get('input#planAprice0').type('120.00');
+          cy.get('input#planAprice1').type('10.00');
+          cy.get('input#planAprice2').type('12');
+          cy.get('button.btn.btn-primary').click();
+
+          cy.on('window:alert', (message) => {
+            expect(message).to.equal('Product Fluid added successfully');
           });
 
     });
@@ -129,8 +150,5 @@ describe('pricing testing', () => {
     //     // TODO Neka look back into this
     //     cy.log(interception.response)
     //     })
-
     // });
-
-    
 })
