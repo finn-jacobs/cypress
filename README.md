@@ -7,9 +7,10 @@ The goal of this project is to build a rudimentary testing suite to automate tas
 - Clone this repo
 - Create `.env` file with the following contents:
 ```
-BASE_URL=http://example_domain.mobilepricecards.com
-USER_EMAIL=example_email@mobilepricecard.com
-USER_PASSWORD=example_password
+BASE_URL=http://example.mobilepricecards.com
+SIGN_IN_EMAIL=example@mobilepricecard.com
+SIGN_IN_PASSWORD=example_passwd
+NEW_USER_EMAIL=example@mobilepricecard.com
 ```
 
 
@@ -17,7 +18,3 @@ USER_PASSWORD=example_password
 - After setup, run `npx cypress open`
 
 If you need help troubleshooting or have questions please reach out to Finn Jacobs or Anneika Weeks
-
-
-# Notes
-- With `testIsolation` set to false in `cypress.config.js`, clearing cache and refreshing browser is necessary between test runs.
