@@ -29,5 +29,11 @@
             "password": "!Password123",
             "group": "OU Administrator"
         }
+    },
+    "store": {
+        "name": "Cypress Store",
+        "code": "cy123",
+        "lang": "en",
+        "password": "1234"
     }
 }
