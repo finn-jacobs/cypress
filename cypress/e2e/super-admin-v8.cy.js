@@ -33,19 +33,7 @@ describe('Super Admin v8', () => {
         cy.fixture('super-admin-v8').then(data => {
             cy.get('#pricingPlanName').type(data.pricePlan.name);
             cy.get('#description').type(data.pricePlan.description);
-    
-            // Handle when dropdown has more than one matching option
-            cy.get('select#idcarrier').then($select => {
-                const $options = $select.find(`option`).filter((i, el) => {
-                    return el.textContent === data.carrier.name;
-                });
-                if ($options.length > 0) {
-                    const valueOfFirstMatch = $options.first().val();
-                    cy.wrap($select).select(valueOfFirstMatch);
-                } else {
-                    cy.log(`No option found matching ${data.carrier.name}`);
-                }
-            });
+            cy.handleDropdown('select#idcarrier', data.carrier.name);
         });
         cy.get('#modal-add___BV_modal_footer_ > button.btn.btn-primary').click();
     });
