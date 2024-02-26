@@ -23,6 +23,7 @@ describe('Super Admin v8', () => {
     });
 
     it("should create a new price plan", () => { 
+        cy.login();
         // Navigate to Price Plans
         cy.getPage('Priceplan');
 
