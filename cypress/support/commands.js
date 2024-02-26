@@ -27,6 +27,7 @@ Cypress.Commands.add('login', () => {
  */
 Cypress.Commands.add('openNav', () => {
     cy.get('#nav-text-collapse > ul.navbar-nav.align-items-center.ml-md-auto > li.nav-item.d-xl-none', {timeout: 10000}).click();
+    // cy.get('[data-target="#navbar"]').click();
 });
 
 
@@ -42,18 +43,35 @@ Cypress.Commands.add('getPage', (route) => {
 
 
 /**
+ * Waits for passed selector to have at least 'expectedCount' number of options
+ * Useful for when selector options take too long to load before cypress
+ * interacts with the element
+ * 
+ * @param selector | String
+ * @param expectedCount | Number
+ */
+Cypress.Commands.add('waitForSelectOptions', (selector, expectedCount) => {
+    cy.get(selector).should(($select) => {
+        const count = $select.find('option').length;
+        expect(count).to.be.at.least(expectedCount);
+    });
+});
+
+
+/**
  * Handles selecting value from select dropdown.
  * 
  * @param selector | String
  * @param value | String
+ * @param expectedCount | Number
  */
-Cypress.Commands.add('handleDropdown', (selector, value) => {
+Cypress.Commands.add('handleDropdown', (selector, value, expectedCount = null) => {
+    if (expectedCount !== null) cy.waitForSelectOptions(selector, expectedCount);
     cy.get(selector).then($select => {
         const $options = $select.find(`option`).filter((i, el) => {
             const textContent = el.textContent.trim().replace(/\s+/g, ' ');
             return textContent === value;
         });
-        console.log($options);
         if ($options.length > 0) {
             const valueOfFirstMatch = $options.first().val();
             cy.wrap($select).select(valueOfFirstMatch).should('have.value', valueOfFirstMatch);
@@ -65,14 +83,16 @@ Cypress.Commands.add('handleDropdown', (selector, value) => {
 
 
 /**
- * Creates an intercept to assert the response of an API call
+ * Creates an intercept to assert the response of an API call and gives
+ * an alias based on the last segment of the endpoint path
  * 
  * @param method | String
  * @param endpoint | String
- * @param aliasName | String
  */
-Cypress.Commands.add('interceptApiCall', (method, endpoint, aliasName) => {
-    cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(aliasName);
+Cypress.Commands.add('interceptApiCall', (method, endpoint) => {
+    const segments = endpoint.split('/');
+    const alias = segments.pop();
+    cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(alias);
 });
 
 
@@ -142,3 +162,5 @@ Cypress.Commands.add('setOUPreference', (labelNumber, title) => {
     // Label title
     cy.get(selector).clear().type(title);
 });
+
+

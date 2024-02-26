@@ -33,7 +33,22 @@
     "store": {
         "name": "Cypress Store",
         "code": "cy123",
-        "lang": "en",
+        "lang": "EN",
         "password": "1234"
+    },
+    "product": {
+        "ar": "9:16",
+        "mfg": "Samsung",
+        "name": "SS 22",
+        "meta": "yellow tail",
+        "sku": "123456",
+        "pricing": {
+            "name": "Cypress Price",
+            "priceFluids": [
+                "$999.99",
+                "$99.99",
+                "10"
+            ]
+        }
     }
 }
