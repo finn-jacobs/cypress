@@ -42,7 +42,7 @@ Cypress.Commands.add('getPage', (route) => {
 
 
 /**
- * Waits for passed selector to have at least 'expectedCount' number of options
+ * Waits for passed selector to have at least 'expectedCount' number of options.
  * Useful for when selector options take too long to load before cypress
  * interacts with the element
  * 
@@ -162,4 +162,25 @@ Cypress.Commands.add('setOUPreference', (labelNumber, title) => {
     cy.get(selector).clear().type(title);
 });
 
+Cypress.Commands.add('addStore', (name, code, lang, password) => {
+
+    // Calculate UTC offset, open, and closing hours
+    const today = new Date();
+    const offset = 0 - (today.getTimezoneOffset() / 60);
+    let open = (today.getUTCHours() + offset + 2) % 24;
+    let closed = (today.getUTCHours() + offset + 1) % 24;
+
+    // Open and fill form
+    cy.contains('Add').click().click();
+    cy.get('#storeName').type(name);
+    cy.get('#storeCode').type(code);
+    cy.get('#storeLang').type(lang);   
+    cy.get('#open-group-1 > div > #open').select(open);
+    cy.get('#closed').select(closed);
+    cy.get('#UTCOffset').type(offset);
+    cy.get('#password').type(password);
+
+    // Submit and assert
+    cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
+})
 

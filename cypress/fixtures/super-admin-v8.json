@@ -30,12 +30,28 @@
             "group": "OU Administrator"
         }
     },
-    "store": {
-        "name": "Cypress Store",
-        "code": "cy123",
-        "lang": "EN",
-        "password": "1234"
-    },
+    "stores": [
+        {
+            "name": "Cypress Store",
+            "code": "cy123",
+            "lang": "EN",
+            "password": "1234"
+        },
+        {
+            "name": "Location Store",
+            "code": "loc123",
+            "lang": "EN",
+            "password": "1234",
+            "location": {
+                "address" : "123 Main Street",
+                "city": "Portland",
+                "zip": "04101",
+                "country": "United States",
+                "state": "Maine"
+            }
+            
+        }
+    ],
     "product": {
         "ar": "9:16",
         "mfg": "Samsung",
