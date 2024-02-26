@@ -3,11 +3,11 @@ The goal of this project is to build a rudimentary testing suite to automate tas
 
 
 # Setup
-- Install Cypress v13.6.4
 - Clone this repo
+- run `npm install`
 - Create `.env` file with the following contents:
 ```
-BASE_URL=http://example.mobilepricecards.com
+BASE_URL=https://example.mobilepricecards.com
 SIGN_IN_EMAIL=example@mobilepricecard.com
 SIGN_IN_PASSWORD=example_passwd
 NEW_USER_EMAIL=example@mobilepricecard.com
