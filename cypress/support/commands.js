@@ -27,7 +27,6 @@ Cypress.Commands.add('login', () => {
  */
 Cypress.Commands.add('openNav', () => {
     cy.get('#nav-text-collapse > ul.navbar-nav.align-items-center.ml-md-auto > li.nav-item.d-xl-none', {timeout: 10000}).click();
-    // cy.get('[data-target="#navbar"]').click();
 });
 
 
