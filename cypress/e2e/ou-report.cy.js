@@ -5,7 +5,7 @@ describe('ou report download', () => {
       cy.intercept('GET', `${Cypress.env('BASE_URL')}/Dashboard/OULevelExport`).as('downloadRequest');
 
       // Trigger the download action (e.g., clicking a download button)
-      cy.get(`a[href="${(Cypress.env('BASE_URL'))}/Dashboard/OULevelExport"]`).click()
+      cy.get(`a[href="${(Cypress.env('BASE_URL'))}Dashboard/OULevelExport"]`).click()
       
       // Wait for the download request to complete
       cy.wait('@downloadRequest').then((interception) => {

@@ -7,22 +7,15 @@ describe('pricing testing', () => {
       cy.get('button.btn.base-button.btn-outline-default')
         .contains('Add').click().click();
 
-      // Open 'Add Product' Modal and fill out all fields
-      // TODO refactor me to work correctly with the FIXTURE 
-      cy.get('select#idcarrier.custom-select.custom-select-sm') 
-          .select('Cypress Carrier');
-      cy.get('select#aspectRatiAddEditModalo')
-        .select('9:16');
-      cy.get('select#mfg.custom-select.custom-select-sm')
-        .select('Samsung');
-      cy.get('input#productName.form-control')
-        .type('SS 22');
-      cy.get('input#mdescLong.form-control')
-        .type('yellow tail');
-      cy.get('input#sku.form-control')
-        .type('123456');
-
-      // save changes
+      // Fill out 'Add Product' Modal and submit 
+      cy.fixture('pricing').then(data =>{
+        cy.get('select#idcarrier.custom-select.custom-select-sm').select(data.productStatic.carrier);
+        cy.get('select#aspectRatiAddEditModalo').select(data.productStatic.aspectRatio);
+        cy.get('select#idcarrier.custom-select.custom-select-sm').select(data.productStatic.mfg);
+        cy.get('input#productName.form-control').type(data.productStatic.productName);
+        cy.get('input#mdescLong.form-control').type(data.productStatic.longDescription);
+        cy.get('input#sku.form-control').type(data.productStatic.sku);
+      })
       cy.get('button.btn.btn-primary').click();
 
       // confirm Product created pop up
