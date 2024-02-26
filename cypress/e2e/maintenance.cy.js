@@ -87,9 +87,6 @@ describe('Maintenance', () => {
     it('should add preferences to OUs', () => {
         cy.intercept('POST', new RegExp(`${Cypress.env('BASE_URL')}/OrgPreferences/(addOUPreference|updateOUPreference)$`)).as('manageOUPreference');
 
-        // Navigate to OU page
-        cy.getPage('organization');
-
         // Select first OU
         cy.get('ul.tree-menu').as('orgList');
         cy.get('@orgList').children().eq(1).click();
@@ -136,7 +133,6 @@ describe('Maintenance', () => {
 
     it('should create a child and grandchild OU', () => {
         cy.interceptApiCall('POST', 'OrgUnit/addOrgUnit');
-        cy.getPage('organization');
     
         // Select parent OU
         cy.get('ul.tree-menu').as('orgList');
@@ -225,14 +221,6 @@ describe('Maintenance', () => {
     it('should upload stores', () => {
         cy.interceptApiCall('POST', 'Store/importStore');
 
-        // Navigate to store page
-        cy.getPage('Store');
-
-        // Select OU
-        cy.fixture('super-admin-v8').then(data => {
-            cy.handleDropdown('#ouSelect', data.ou.name, 2);
-        });
-
         // Open upload store modal
         cy.get('div.card-header.text-center > div:nth-child(1) > div:nth-child(1) > div').click();
         
@@ -254,6 +242,7 @@ describe('Maintenance', () => {
         cy.intercept('GET', `${adjustedUrl}/Store/export*`).as('export');
         
         // Navigate to store page
+        cy.login();
         cy.getPage('Store');
 
         // Select OU
