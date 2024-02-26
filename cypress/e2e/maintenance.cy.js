@@ -97,7 +97,7 @@ describe('Maintenance', () => {
         // Set preferences
         cy.fixture('super-admin-v8').then(data => {
             data.ou.preferences.forEach((preference, index) => {
-                cy.setOUPreference(index, preference.title)
+                cy.setOUPreference(index, preference)
             });
         });
 
@@ -118,7 +118,7 @@ describe('Maintenance', () => {
         // Set preferences
         cy.fixture('super-admin-v8').then(data => {
             data.ou.preferences.forEach((preference, index) => {
-                cy.setOUPreference(index, preference.title)
+                cy.setOUPreference(index, preference)
             });
         });
 
