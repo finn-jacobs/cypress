@@ -1,6 +1,6 @@
 describe('test', () => {
     it('should create a child OU', () => {
-        cy.interceptApiCall('POST', 'OrgUnit/addOrgUnit', 'addOrgUnit');
+        cy.interceptApiCall('POST', 'OrgUnit/addOrgUnit');
         cy.login();
         cy.getPage('organization');
     

@@ -1,13 +1,12 @@
 describe('test', () => {
     it('should create a new store with add button', () => {
-        cy.interceptApiCall('POST', 'Store/addStore', 'addStore'); 
+        cy.interceptApiCall('POST', 'Store/addStore'); 
         cy.login();
         cy.getPage('Store');
-
         cy.fixture('super-admin-v8').then(data => {
-            
-            // Select OU
-            cy.handleDropdown('#ouSelect', data.ou.name);
+
+            // Select Org
+            cy.handleDropdown('#ouSelect', data.ou.name, 2);
             
             // Calculate UTC offset, open, and closing hours
             const today = new Date();

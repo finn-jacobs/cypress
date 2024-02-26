@@ -1,6 +1,6 @@
 describe('test', () => {
     it("should create a new price plan", () => {
-        cy.interceptApiCall('POST', 'PricePlan/addPricingPlan', 'addPricingPlan');
+        cy.interceptApiCall('POST', 'PricePlan/addPricingPlan');
 
         cy.login();
 

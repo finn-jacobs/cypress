@@ -1,6 +1,6 @@
 describe('Test', () => {
     it("should create sibling OU's", () => {
-        cy.interceptApiCall('POST', 'OrgUnit/addOrgUnit', 'addOrgUnit');
+        cy.interceptApiCall('POST', 'OrgUnit/addOrgUnit');
         
         cy.login();
         // Navigate to OU

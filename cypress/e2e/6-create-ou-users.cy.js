@@ -1,6 +1,6 @@
 describe('test', () => {
     it('should create a user under Cypress Org', () => {
-        cy.interceptApiCall('POST', 'Users/addUser', 'addUser');
+        cy.interceptApiCall('POST', 'Users/addUser');
         cy.login();
         cy.getPage('userlist');
 

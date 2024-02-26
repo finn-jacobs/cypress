@@ -1,6 +1,6 @@
 describe('test', () => {
     it("should add a new carrier", () => {
-        cy.interceptApiCall('POST', 'Carriers/add', 'addCarrier');
+        cy.interceptApiCall('POST', 'Carriers/add');
         
         // Login to Phoenix
         cy.login();
@@ -19,7 +19,7 @@ describe('test', () => {
         cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
 
         // Assert
-        cy.wait('@addCarrier').then(({response}) => {
+        cy.wait('@add').then(({response}) => {
             const body = JSON.parse(response.body);
             expect(response.statusCode).to.eq(200);
             expect(body.error).to.eq(false);
