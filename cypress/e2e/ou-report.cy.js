@@ -9,10 +9,7 @@ describe('ou report download', () => {
       
       // Wait for the download request to complete
       cy.wait('@downloadRequest').then((interception) => {
-        expect(interception.response.statusCode).to.equal(200); // Check if the response status code is 200 (OK)
-
-        // TODO Neka look back into this
-        cy.log(interception.response)
+        expect(interception.response.statusCode).to.equal(200);
       });
 
     })
