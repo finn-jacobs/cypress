@@ -1,37 +1,49 @@
 describe('pricing testing', () => {
-  it('should create a new product', () => {
-      // Login to Phoenix & navigate to Pricing Page
-      cy.login(); 
-      cy.getPage('ProductStatic');
+it('should create a new product', () => {
+        cy.interceptApiCall('POST', 'ProductStatic/addProductStatic');
+        cy.login();
 
-      cy.get('button.btn.base-button.btn-outline-default')
-        .contains('Add').click().click();
+        // Navigate to Product Static
+        cy.getPage('ProductStatic');
 
-      // Fill out 'Add Product' Modal and submit 
-      cy.fixture('pricing').then(data =>{
-        cy.get('select#idcarrier.custom-select.custom-select-sm').select(data.productStatic.carrier);
-        cy.get('select#aspectRatiAddEditModalo').select(data.productStatic.aspectRatio);
-        cy.get('select#idcarrier.custom-select.custom-select-sm').select(data.productStatic.mfg);
-        cy.get('input#productName.form-control').type(data.productStatic.productName);
-        cy.get('input#mdescLong.form-control').type(data.productStatic.longDescription);
-        cy.get('input#sku.form-control').type(data.productStatic.sku);
-      })
-      cy.get('button.btn.btn-primary').click();
+        // Press the 'Add' Button
+        cy.get('button.btn.base-button.btn-outline-default')
+            .contains('Add')
+            .click().click();
 
-      // confirm Product created pop up
-      cy.on('window:alert', (message) => {
-          expect(message).to.equal('Product Static added successfully');
+        // Fill out 'Add Product' Modal and submit 
+        cy.fixture('super-admin-v8').then(data => {
+            cy.handleDropdown('#idcarrier', data.carrier.name);
+            cy.handleDropdown('#aspectRatiAddEditModalo', data.product.ar);
+            cy.handleDropdown('#mfg.custom-select.custom-select-sm', data.product.mfg);
+            cy.get('#productName').type(data.product.name);
+            cy.get('#mdescLong').type(data.product.meta);
+            cy.get('#sku').type(data.product.sku);
         });
-  });
 
-  it('should upload a file and a new product should be created', () => {
-    // Login to Phoenix & navigate to Pricing Page
-      cy.login(); 
-      cy.getPage('ProductStatic');
-      cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success')
-          .contains('Upload Product').click();
+        // Submit and assert
+        cy.get('button.btn.btn-primary').click()
+        cy.wait('@addProductStatic').then(({response}) => {
+            const body = JSON.parse(response.body);
+            expect(response.statusCode).to.eq(200);
+            expect(body.error).to.eq(false);
+        })
 
-      // find sample file and upload
+    });
+
+    it('should upload a file and a new product should be created', () => {
+        cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1')
+        cy.login();
+
+        // Navigate to Product Static
+        cy.getPage('ProductStatic');
+        
+        // Open Upload Product modal
+        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success')
+            .contains('Upload Product')
+            .click();
+
+      // Upload file
       const filePath = 'cypress/assets/sample_product.xlsx';
       
       cy.get('label[for="importfile"]').selectFile(filePath);
@@ -125,21 +137,24 @@ describe('pricing testing', () => {
     });
 });
 
-  it('should download all pricing', () => {
-    // login and navigate to pricing page
-    cy.login();
-    cy.getPage('ProductStatic');
+    it('should download all pricing', () => {
+        cy.login();
 
-    cy.intercept('GET', `${Cypress.env('BASE_URL')}/Analytics/genratePriceList`).as('downloadRequest');
+        // Navigate to 
+        cy.getPage('ProductStatic');
 
-    // Trigger the download action (e.g., clicking a download button)
-    cy.get(`a[href="${(Cypress.env('BASE_URL'))}Analytics/genratePriceList"]`).click();
-    
-    // Wait for the download request to complete
-    cy.wait('@downloadRequest').then((interception) => {
-      expect(interception.response.statusCode).to.equal(200); 
-      // TODO Neka look back into this
-      cy.log(interception.response)
-      })
-  });
+        cy.intercept('GET', `${Cypress.env('BASE_URL')}/Analytics/genratePriceList`).as('downloadRequest');
+
+        // Trigger the download action (e.g., clicking a download button)
+        cy.get(`a[href="${(Cypress.env('BASE_URL'))}/Analytics/genratePriceList"]`).click()
+        
+        // Wait for the download request to complete
+        cy.wait('@downloadRequest').then((interception) => {
+          expect(interception.response.statusCode).to.equal(200); // Check if the response status code is 200 (OK)
+
+          // TODO Neka look back into this
+          cy.log(interception.response)
+        })
+
+    });
 })

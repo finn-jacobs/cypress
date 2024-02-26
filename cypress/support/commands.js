@@ -11,8 +11,8 @@ Cypress.Commands.add('login', () => {
     cy.location().then((loc) => {
         if (loc === null) {
             cy.origin('https://dev-w0f53seg.us.auth0.com', () => {
-                cy.get('#email').type(Cypress.env('USER_EMAIL'));
-                cy.get('#password').type(Cypress.env('USER_PASSWORD'));
+                cy.get('#email').type(Cypress.env('SIGN_IN_EMAIL'));
+                cy.get('#password').type(Cypress.env('SIGN_IN_PASSWORD'));
                 cy.get('#btn-login').click();
             });
         }
@@ -42,18 +42,35 @@ Cypress.Commands.add('getPage', (route) => {
 
 
 /**
+ * Waits for passed selector to have at least 'expectedCount' number of options.
+ * Useful for when selector options take too long to load before cypress
+ * interacts with the element
+ * 
+ * @param selector | String
+ * @param expectedCount | Number
+ */
+Cypress.Commands.add('waitForSelectOptions', (selector, expectedCount) => {
+    cy.get(selector).should(($select) => {
+        const count = $select.find('option').length;
+        expect(count).to.be.at.least(expectedCount);
+    });
+});
+
+
+/**
  * Handles selecting value from select dropdown.
  * 
  * @param selector | String
  * @param value | String
+ * @param expectedCount | Number
  */
-Cypress.Commands.add('handleDropdown', (selector, value) => {
+Cypress.Commands.add('handleDropdown', (selector, value, expectedCount = null) => {
+    if (expectedCount !== null) cy.waitForSelectOptions(selector, expectedCount);
     cy.get(selector).then($select => {
         const $options = $select.find(`option`).filter((i, el) => {
             const textContent = el.textContent.trim().replace(/\s+/g, ' ');
             return textContent === value;
         });
-        console.log($options);
         if ($options.length > 0) {
             const valueOfFirstMatch = $options.first().val();
             cy.wrap($select).select(valueOfFirstMatch).should('have.value', valueOfFirstMatch);
@@ -65,14 +82,16 @@ Cypress.Commands.add('handleDropdown', (selector, value) => {
 
 
 /**
- * Creates an intercept to assert the response of an API call
+ * Creates an intercept to assert the response of an API call and gives
+ * an alias based on the last segment of the endpoint path
  * 
  * @param method | String
  * @param endpoint | String
- * @param aliasName | String
  */
-Cypress.Commands.add('interceptApiCall', (method, endpoint, aliasName) => {
-    cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(aliasName);
+Cypress.Commands.add('interceptApiCall', (method, endpoint) => {
+    const segments = endpoint.split('/');
+    const alias = segments.pop();
+    cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(alias);
 });
 
 
@@ -142,3 +161,26 @@ Cypress.Commands.add('setOUPreference', (labelNumber, title) => {
     // Label title
     cy.get(selector).clear().type(title);
 });
+
+Cypress.Commands.add('addStore', (name, code, lang, password) => {
+
+    // Calculate UTC offset, open, and closing hours
+    const today = new Date();
+    const offset = 0 - (today.getTimezoneOffset() / 60);
+    let open = (today.getUTCHours() + offset + 2) % 24;
+    let closed = (today.getUTCHours() + offset + 1) % 24;
+
+    // Open and fill form
+    cy.contains('Add').click().click();
+    cy.get('#storeName').type(name);
+    cy.get('#storeCode').type(code);
+    cy.get('#storeLang').type(lang);   
+    cy.get('#open-group-1 > div > #open').select(open);
+    cy.get('#closed').select(closed);
+    cy.get('#UTCOffset').type(offset);
+    cy.get('#password').type(password);
+
+    // Submit and assert
+    cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
+})
+

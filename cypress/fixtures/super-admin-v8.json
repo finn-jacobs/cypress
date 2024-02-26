@@ -25,10 +25,46 @@
         ],
         "user": {
             "name": "Cypress User",
-            "email": "finn.jacobs+1234567@mobilepricecard.com",
             "phone": "1234567890",
             "password": "!Password123",
             "group": "OU Administrator"
+        }
+    },
+    "stores": [
+        {
+            "name": "Cypress Store",
+            "code": "cy123",
+            "lang": "EN",
+            "password": "1234"
+        },
+        {
+            "name": "Location Store",
+            "code": "loc123",
+            "lang": "EN",
+            "password": "1234",
+            "location": {
+                "address" : "123 Main Street",
+                "city": "Portland",
+                "zip": "04101",
+                "country": "United States",
+                "state": "Maine"
+            }
+            
+        }
+    ],
+    "product": {
+        "ar": "9:16",
+        "mfg": "Samsung",
+        "name": "SS 22",
+        "meta": "yellow tail",
+        "sku": "123456",
+        "pricing": {
+            "name": "Cypress Price",
+            "priceFluids": [
+                "$999.99",
+                "$99.99",
+                "10"
+            ]
         }
     }
 }
