@@ -7,9 +7,7 @@ it('should create a new product', () => {
         cy.getPage('ProductStatic');
 
         // Press the 'Add' Button
-        cy.get('button.btn.base-button.btn-outline-default')
-            .contains('Add')
-            .click().click();
+        cy.get('button.btn.base-button.btn-outline-default').contains('Add').click().click();
 
         // Fill out 'Add Product' Modal and submit 
         cy.fixture('super-admin-v8').then(data => {
@@ -22,26 +20,23 @@ it('should create a new product', () => {
         });
 
         // Submit and assert
-        cy.get('button.btn.btn-primary').click()
-        cy.wait('@addProductStatic').then(({response}) => {
+        cy.get('button.btn.btn-primary').click();
+        cy.wait('@addProductStatic').then(({ response }) => {
             const body = JSON.parse(response.body);
             expect(response.statusCode).to.eq(200);
             expect(body.error).to.eq(false);
-        })
-
+        });
     });
 
     it('should upload a file and a new product should be created', () => {
-        cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1')
+        cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1');
         cy.login();
 
         // Navigate to Product Static
         cy.getPage('ProductStatic');
-        
+
         // Open Upload Product modal
-        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success')
-            .contains('Upload Product')
-            .click();
+        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success').contains('Upload Product').click();
 
       // Upload file
       const filePath = 'cypress/assets/sample_product.xlsx';
@@ -140,21 +135,20 @@ it('should create a new product', () => {
     it('should download all pricing', () => {
         cy.login();
 
-        // Navigate to 
+        // Navigate to
         cy.getPage('ProductStatic');
 
         cy.intercept('GET', `${Cypress.env('BASE_URL')}/Analytics/genratePriceList`).as('downloadRequest');
 
         // Trigger the download action (e.g., clicking a download button)
-        cy.get(`a[href="${(Cypress.env('BASE_URL'))}/Analytics/genratePriceList"]`).click()
-        
+        cy.get(`a[href="${Cypress.env('BASE_URL')}/Analytics/genratePriceList"]`).click();
+
         // Wait for the download request to complete
         cy.wait('@downloadRequest').then((interception) => {
-          expect(interception.response.statusCode).to.equal(200); // Check if the response status code is 200 (OK)
+            expect(interception.response.statusCode).to.equal(200); // Check if the response status code is 200 (OK)
 
-          // TODO Neka look back into this
-          cy.log(interception.response)
-        })
-
+            // TODO Neka look back into this
+            cy.log(interception.response);
+        });
     });
-})
+});
