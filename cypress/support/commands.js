@@ -162,6 +162,15 @@ Cypress.Commands.add('setOUPreference', (labelNumber, title) => {
     cy.get(selector).clear().type(title);
 });
 
+
+/**
+ * Opens add store modal and creates a new store
+ * 
+ * @param name | String
+ * @param code | String
+ * @param lang | String
+ * @param password | String
+ */
 Cypress.Commands.add('addStore', (name, code, lang, password) => {
 
     // Calculate UTC offset, open, and closing hours
@@ -184,3 +193,37 @@ Cypress.Commands.add('addStore', (name, code, lang, password) => {
     cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
 })
 
+
+/**
+ * When passed selectors for start and end dates, selects
+ * current date and 2 days from current date for start
+ * and end date values
+ * 
+ * @param startDatePicker | String
+ * @param endDatePicker | String
+ */
+Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
+    
+    // Calculate start and end dates
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }
+    const _date = new Date();
+    _date.setDate(_date.getDate() + 2);
+    const endDate = _date.toLocaleDateString('en-CA', options);
+    const startDate = new Date().toLocaleDateString('en-CA', options);
+
+    // Select Start Date
+    cy.get(startDatePicker).then($label => {
+        cy.wrap($label).click();
+        cy.get(`[data-date="${startDate}"]`).click();
+    });
+
+    // Select End Date
+    cy.get(endDatePicker).then($label => {
+        cy.wrap($label).click();
+        cy.get(`[data-date="${endDate}"]`).click();
+    });
+});
