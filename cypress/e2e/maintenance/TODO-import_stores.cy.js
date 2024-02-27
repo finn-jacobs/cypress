@@ -4,7 +4,7 @@ describe('test', () => {
         cy.getPage('Store');
 
         // Select OU
-        cy.fixture('super-admin-v8').then(data => {
+        cy.fixture('super-admin-v8').then((data) => {
             cy.handleDropdown('#ouSelect', data.ou.name, 2);
         });
 
