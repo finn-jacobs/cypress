@@ -92,6 +92,21 @@ Cypress.Commands.add('interceptApiCall', (method, endpoint) => {
 });
 
 /**
+ * Asserts response body of passed alias and toast message
+ *
+ * @param alias | String
+ */
+Cypress.Commands.add('assertResponse', (alias) => {
+    cy.wait(alias).then(({ response }) => {
+        const body = JSON.parse(response.body);
+        expect(response.statusCode).to.eq(200);
+        expect(body.error).to.eq(false);
+        cy.get('p.v-toast__text').should('contain.text', body.msg);
+        cy.get('div.v-toast__item').invoke('remove');
+    });
+});
+
+/**
  * Adds an Organizational Unit on the OU page
  *
  * @param name | String
@@ -117,7 +132,7 @@ Cypress.Commands.add('createOU', (name, carrier, pricePlan, isChild = false) => 
     cy.get('#modal-add___BV_modal_title_').click();
 
     // Select Price Plan
-    cy.handleDropdown('select#pricingPlanID', pricePlan);
+    cy.handleDropdown('select#pricingPlanID', pricePlan, 1);
 
     // Submit and close modal
     cy.get('#modal-add___BV_modal_footer_ > button.btn.btn-primary').click();
