@@ -4,7 +4,7 @@
         "description": "Automated with Cypress."
     },
     "pricePlan": {
-        "name":"Cypress Price Plan",
+        "name": "Cypress Price Plan",
         "description": "Description goes here."
     },
     "ou": {
@@ -12,11 +12,7 @@
         "siblingName": "Sibling",
         "childName": "Child",
         "grandchildName": "Grandchild",
-        "preferences": [
-            "Retail",
-            "Monthly",
-            "No. Payments"
-        ],
+        "preferences": ["Retail", "Monthly", "No. Payments"],
         "user": {
             "name": "Cypress User",
             "phone": "1234567890",
@@ -37,13 +33,12 @@
             "lang": "EN",
             "password": "1234",
             "location": {
-                "address" : "123 Main Street",
+                "address": "123 Main Street",
                 "city": "Portland",
                 "zip": "04101",
                 "country": "United States",
                 "state": "Maine"
             }
-            
         }
     ],
     "product": {
@@ -54,11 +49,7 @@
         "sku": "123456",
         "pricing": {
             "name": "Cypress Price",
-            "priceFluids": [
-                "$999.99",
-                "$99.99",
-                "10"
-            ]
+            "priceFluids": ["$999.99", "$99.99", "10"]
         }
     }
 }

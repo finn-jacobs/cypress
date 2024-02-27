@@ -7,13 +7,13 @@ describe('test', () => {
         cy.getPage('Store');
 
         // Select OU
-        cy.fixture('super-admin-v8').then(data => {
+        cy.fixture('super-admin-v8').then((data) => {
             cy.handleDropdown('#ouSelect', data.ou.name, 2).wait(500);
         });
 
         // Download and assert
         cy.contains('Download Stores').click();
-        cy.wait('@export').then(({response}) => {
+        cy.wait('@export').then(({ response }) => {
             expect(response.statusCode).to.eq(200);
         });
     });
