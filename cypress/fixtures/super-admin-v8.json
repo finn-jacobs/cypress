@@ -47,9 +47,16 @@
         "name": "SS 22",
         "meta": "yellow tail",
         "sku": "123456",
+        "os": "Android",
         "pricing": {
             "name": "Cypress Price",
             "priceFluids": ["$999.99", "$99.99", "10"]
         }
+    },
+    "priceCard": {
+        "name": "Cypress Card",
+        "description": "Description goes here.",
+        "layout": "square",
+        "orientation": "Portrait"
     }
 }
