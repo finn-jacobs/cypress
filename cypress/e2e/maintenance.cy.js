@@ -12,19 +12,15 @@ describe('Maintenance', () => {
         // Open add carrier modal
         cy.get('div.card-header > div > div.col-md-4 > div > button').click().click();
 
-        // Fill form and submit
+        // Fill form
         cy.fixture('super-admin-v8').then((data) => {
             cy.get('#term-group-1 > div > #value').type(data.carrier.name);
             cy.get('#value-group-1 > div > #value').type(data.carrier.description);
         });
-        cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
 
-        // Assert
-        cy.wait('@add').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        // Submit and assert
+        cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
+        cy.assertResponse('@add');
     });
 
     // ends on price plan page
@@ -37,20 +33,16 @@ describe('Maintenance', () => {
         // Open add price plan modal
         cy.get('.card-header.text-center > div > div:nth-child(3) > div > button').click().click();
 
-        // Fill form and submit
+        // Fill form
         cy.fixture('super-admin-v8').then((data) => {
             cy.get('#pricingPlanName').type(data.pricePlan.name);
             cy.get('#description').type(data.pricePlan.description);
             cy.handleDropdown('select#idcarrier', data.carrier.name);
         });
-        cy.get('#modal-add___BV_modal_footer_ > button.btn.btn-primary').click();
 
-        // Assert
-        cy.wait('@addPricingPlan').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        // Submit and assert
+        cy.get('#modal-add___BV_modal_footer_ > button.btn.btn-primary').click();
+        cy.assertResponse('@addPricingPlan');
     });
 
     it("should create sibling OU's", () => {
@@ -66,19 +58,11 @@ describe('Maintenance', () => {
         cy.fixture('super-admin-v8').then((data) => {
             // Create first OU and assert
             cy.createOU(data.ou.name, data.carrier.name, data.pricePlan.name);
-            cy.wait('@addOrgUnit').then(({ response }) => {
-                const body = JSON.parse(response.body);
-                expect(response.statusCode).to.eq(200);
-                expect(body.error).to.eq(false);
-            });
+            cy.assertResponse('@addOrgUnit');
 
             // Create second OU and assert
             cy.createOU(data.ou.siblingName, data.carrier.name, data.pricePlan.name);
-            cy.wait('@addOrgUnit').then(({ response }) => {
-                const body = JSON.parse(response.body);
-                expect(response.statusCode).to.eq(200);
-                expect(body.error).to.eq(false);
-            });
+            cy.assertResponse('@addOrgUnit');
         });
     });
 
@@ -102,13 +86,9 @@ describe('Maintenance', () => {
             });
         });
 
-        // Submit
+        // Submit and assert
         cy.get('.tab-content > .active > .btn-wraper > button').click();
-        cy.wait('@manageOUPreference').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        cy.assertResponse('@manageOUPreference');
 
         // select second OU
         cy.get('@orgList').children().eq(2).click();
@@ -123,13 +103,9 @@ describe('Maintenance', () => {
             });
         });
 
-        // Submit
+        // Submit and assert
         cy.get('.tab-content > .active > .btn-wraper > button').click();
-        cy.wait('@manageOUPreference').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        cy.assertResponse('@manageOUPreference');
     });
 
     it('should create a child and grandchild OU', () => {
@@ -141,7 +117,7 @@ describe('Maintenance', () => {
 
         let childID;
 
-        // Create child OU
+        // Create child OU and assert
         cy.fixture('super-admin-v8').then((data) => {
             cy.createOU(data.ou.childName, data.carrier.name, data.pricePlan.name, true);
             cy.wait('@addOrgUnit').then(({ response }) => {
@@ -154,13 +130,9 @@ describe('Maintenance', () => {
                 cy.get('@orgList').children().eq(1).click();
                 cy.get(`#wrapli${childID}`).click();
 
-                // Create grandchild OU
+                // Create grandchild OU and assert
                 cy.createOU(data.ou.grandchildName, data.carrier.name, data.pricePlan.name, true);
-                cy.wait('@addOrgUnit').then(({ response }) => {
-                    const body = JSON.parse(response.body);
-                    expect(response.statusCode).to.eq(200);
-                    expect(body.error).to.eq(false);
-                });
+                cy.assertResponse('@addOrgUnit');
             });
         });
     });
@@ -193,7 +165,7 @@ describe('Maintenance', () => {
         cy.wait('@addUser').then(({ response }) => {
             const body = JSON.parse(response.body);
             expect(response.statusCode).to.eq(200);
-            // TODO: figure out why this retuns false when user is created successfully
+            // TODO: figure out why error = true when user is created successfully
             // expect(body.error).to.eq(false);
         });
     });
@@ -212,11 +184,7 @@ describe('Maintenance', () => {
         });
 
         // Assert
-        cy.wait('@addStore').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        cy.assertResponse('@addStore');
     });
 
     it('should upload stores', () => {
@@ -230,11 +198,7 @@ describe('Maintenance', () => {
 
         // Submit and assert
         cy.get('#modal-import___BV_modal_footer_ > button.btn.btn-primary').click();
-        cy.wait('@importStore').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        cy.assertResponse('@importStore');
     });
 
     it('should download stores from OU', () => {
@@ -293,11 +257,7 @@ describe('Maintenance', () => {
 
         // Submit and assert
         cy.get('#modal-add-location___BV_modal_footer_ > button.btn.btn-primary').click();
-        cy.wait('@addLocationToStore').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        cy.assertResponse('@addLocationToStore');
     });
 });
 

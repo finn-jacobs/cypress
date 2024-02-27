@@ -19,10 +19,6 @@ describe('test', () => {
         cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
 
         // Assert
-        cy.wait('@add').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
+        cy.assertResponse('@add');
     });
 });
