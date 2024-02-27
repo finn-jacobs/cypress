@@ -58,5 +58,10 @@
         "description": "Description goes here.",
         "layout": "square",
         "orientation": "Portrait"
+    },
+    "term": {
+        "aspectRatio": "ar",
+        "orientation": "layout",
+        "manufacturer": "mfg"
     }
 }
