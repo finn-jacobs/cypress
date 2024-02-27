@@ -22,11 +22,7 @@ describe('pricing testing', () => {
 
       // Submit and assert
       cy.get('button.btn.btn-primary').click()
-      cy.wait('@addProductStatic').then(({response}) => {
-          const body = JSON.parse(response.body);
-          expect(response.statusCode).to.eq(200);
-          expect(body.error).to.eq(false);
-      })
+      cy.assertResponse('@addProductStatic');
   });
 
   it('should upload a file and a new product should be created', () => {
@@ -43,11 +39,7 @@ describe('pricing testing', () => {
 
       // Submit and assert
       cy.get('button.btn.btn-primary').click();
-      cy.wait('@uploadProduct1').then(({response}) => {
-          const body = JSON.parse(response.body);
-          expect(response.statusCode).to.eq(200);
-          expect(body.error).to.eq(false);
-      });
+      cy.assertResponse('@uploadProduct1');
   });
 
   it('should check that both new products have red dots on the price card column', () => {
@@ -86,11 +78,7 @@ describe('pricing testing', () => {
     });
 
     // Assert
-    cy.wait('@addProductFluid1*').then(({response}) => {
-        const body = JSON.parse(response.body);
-        expect(response.statusCode).to.eq(200);
-        expect(body.error).to.eq(false);
-    });
+    cy.assertResponse('@addProductFluid1*');
   });
 
   it('should add a second product fluid to that product', () => {
@@ -113,11 +101,7 @@ describe('pricing testing', () => {
     });
     
     // Assert 
-    cy.wait('@addProductFluid1*').then(({response}) => {
-      const body = JSON.parse(response.body);
-      expect(response.statusCode).to.eq(200);
-      expect(body.error).to.eq(false);
-    });
+    cy.assertResponse('@addProductFluid1*');
   });
 
   it('should download all pricing', () => {
