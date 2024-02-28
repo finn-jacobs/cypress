@@ -63,11 +63,12 @@ describe('pricing testing', () => {
 
         // Fill out form
         cy.fixture('super-admin-v8').then((data) => {
+            const pricing = data.product.pricing[0];
             cy.handleDropdown('select#pricingPlanID', data.pricePlan.name);
-            cy.get('#planpricename').type(data.product.pricing.name);
+            cy.get('#planpricename').type(pricing.name);
             cy.get('label[for="isDefault"]').click();
 
-            data.product.pricing.priceFluids[0].forEach((priceFluid, index) => {
+            pricing.priceFluids.forEach((priceFluid, index) => {
                 cy.get(`#planAprice${index}`).type(priceFluid);
             });
             cy.get('button.btn.btn-primary').contains('Ok').click();
@@ -86,11 +87,12 @@ describe('pricing testing', () => {
 
         // Fill out form
         cy.fixture('super-admin-v8').then((data) => {
+            const pricing = data.product.pricing[1];
             cy.handleDropdown('select#pricingPlanID', data.pricePlan.name);
-            cy.get('#planpricename').type(data.product.pricing.name2);
+            cy.get('#planpricename').type(pricing.name);
             cy.get('label[for="isDefault"]').click();
 
-            data.product.pricing.priceFluids[1].forEach((priceFluid, index) => {
+            pricing.priceFluids.forEach((priceFluid, index) => {
                 cy.get(`#planAprice${index}`).type(priceFluid);
             });
             cy.get('button.btn.btn-primary').contains('Ok').click();

@@ -25,7 +25,8 @@
             "name": "Cypress Store",
             "code": "cy123",
             "lang": "EN",
-            "password": "1234"
+            "password": "1234",
+            "location": {}
         },
         {
             "name": "Location Store",
@@ -48,14 +49,16 @@
         "meta": "yellow tail",
         "sku": "123456",
         "os": "Android",
-        "pricing": {
-            "name": "Cypress Price",
-            "name2": "Cypress Price 2",
-            "priceFluids": [
-                ["$999.99", "$99.99", "10"],
-                ["$120.00", "$20.00", "10"]
-            ]
-        }
+        "pricing": [
+            {
+                "name": "Cypress Price",
+                "priceFluids": ["$999.99", "$99.99", "10"]
+            },
+            {
+                "name2": "Cypress Price 2",
+                "priceFluids": ["$120.00", "$20.00", "10"]
+            }
+        ]
     },
     "priceCard": {
         "name": "Cypress Card",
