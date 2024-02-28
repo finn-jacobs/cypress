@@ -87,7 +87,7 @@ Cypress.Commands.add('handleDropdown', (selector, value, expectedCount = null) =
  */
 Cypress.Commands.add('interceptApiCall', (method, endpoint) => {
     const segments = endpoint.split('/');
-    segments[1].replace('*', '')
+    segments[1].replace('*', '');
     const alias = segments.pop();
     cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(alias);
 });
@@ -247,4 +247,26 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
         cy.wrap($label).click();
         cy.get(`[data-date="${endDate}"]`).click();
     });
+});
+
+/**
+ * Checks most recently added product's price card status indicator
+ *
+ * @param isActive | Boolean
+ */
+Cypress.Commands.add('checkProductStatus', (isActive) => {
+    // Navigate to last page of product table
+    cy.get('ul[aria-label="Pagination"]').then(($pagination) => {
+        const $lastPageButton = $pagination.find('button[aria-label="Go to last page"]');
+        if ($lastPageButton.length) {
+            cy.wrap($lastPageButton).click();
+        }
+    });
+
+    // Check indicator
+    cy.get('tbody')
+        .children()
+        .last()
+        .find('td[aria-colindex="5"] i')
+        .should('have.class', isActive ? 'green' : 'red');
 });
