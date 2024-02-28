@@ -1,10 +1,7 @@
 describe('terms', () => {
     it('should add a new ar term', () => {
         cy.interceptApiCall('POST', 'Terms/addTerm');
-
-        // login and navigate to terms page
-        cy.login();
-        cy.getPage('terms');
+        cy.loginAndNavigateToPage('terms');
 
         // open and fill out modal
         cy.get('button.btn.base-button.btn-outline-default').click().click();
@@ -24,10 +21,7 @@ describe('terms', () => {
 
     it('should add a new mfg term', () => {
         cy.interceptApiCall('POST', 'Terms/addTerm');
-
-        // login and navigate to terms page
-        cy.login();
-        cy.getPage('terms');
+        cy.loginAndNavigateToPage('terms');
 
         // open and fill out modal
         cy.get('button.btn.base-button.btn-outline-default').click().click();
@@ -47,10 +41,7 @@ describe('terms', () => {
 
     it('should add a new layout term', () => {
         cy.interceptApiCall('POST', 'Terms/addTerm');
-
-        // login and navigate to terms page
-        cy.login();
-        cy.getPage('terms');
+        cy.loginAndNavigateToPage('terms');
 
         // open and fill out modal
         cy.get('button.btn.base-button.btn-outline-default').click().click();
