@@ -188,8 +188,10 @@ describe('Maintenance', () => {
         // Open upload store modal
         cy.get('div.card-header.text-center > div:nth-child(1) > div:nth-child(1) > div').click();
 
+        const filePath = 'cypress/assets/upload_stores.xslsx';
+
         // Add file to upload
-        cy.get('label[for="importfile"]').selectFile('./assets/upload_stores.xlsx');
+        cy.get('label[for="importfile"]').selectFile(filePath);
 
         // Submit and assert
         cy.get('#modal-import___BV_modal_footer_ > button.btn.btn-primary').click();
