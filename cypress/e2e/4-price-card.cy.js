@@ -10,7 +10,7 @@ describe('test', () => {
         // Fill form
         cy.fixture('super-admin-v8').then((data) => {
             cy.handleDropdown('#idcarrier', data.carrier.name);
-            cy.handleDropdown('#idproduct', data.product.name);
+            cy.handleDropdown('#idproduct', data.product.name, 2);
             cy.get('#priceCardName').type(data.priceCard.name);
             cy.get('#longDescription').type(data.priceCard.description);
             cy.handleDropdown('#aspectRatio', data.product.ar);
@@ -26,7 +26,9 @@ describe('test', () => {
     });
 
     it('should verify product now has GREEN status for pricecard', () => {
+        cy.interceptApiCall('GET', 'ProductStatic/showPage*');
         cy.getPage('ProductStatic');
+        cy.wait('@showPage*');
         cy.checkNewestProductStatus(true);
     });
 });

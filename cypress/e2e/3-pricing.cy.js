@@ -23,6 +23,7 @@ describe('pricing testing', () => {
 
     it('should create a new product', () => {
         cy.interceptApiCall('POST', 'ProductStatic/addProductStatic');
+        cy.interceptApiCall('GET', 'ProductStatic/showProductStaticDropDowns');
 
         // Press the 'Add' Button
         cy.get('button.btn.base-button.btn-outline-default').contains('Add').click().click();
@@ -40,6 +41,7 @@ describe('pricing testing', () => {
         // Submit and assert
         cy.get('button.btn.btn-primary').click();
         cy.assertResponse('@addProductStatic').wait(500);
+        cy.wait('@showProductStaticDropDowns');
     });
 
     it('should check that pricecard status indicator is RED', () => {
@@ -83,7 +85,7 @@ describe('pricing testing', () => {
         cy.interceptApiCall('GET', 'Analytics/genratePriceList');
 
         // Trigger the download action
-        cy.get(`a[href="${Cypress.env('BASE_URL')}Analytics/genratePriceList"]`).click();
+        cy.get(`a[href*="Analytics/genratePriceList"]`).click();
 
         // Assert
         cy.wait('@genratePriceList').then(({ response }) => {
