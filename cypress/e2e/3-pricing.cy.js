@@ -1,6 +1,7 @@
 describe('pricing testing', () => {
     it('should upload a file and a new product should be created', () => {
         cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1');
+        cy.interceptApiCall('GET', 'ProductStatic/showProductStaticDropDowns');
         cy.loginAndNavigateToPage('ProductStatic');
 
         // Open Upload Product modal
@@ -13,6 +14,11 @@ describe('pricing testing', () => {
         // Submit and assert
         cy.get('button.btn.btn-primary').click();
         cy.assertResponse('@uploadProduct1');
+        cy.wait('@showProductStaticDropDowns');
+    });
+
+    it('should check that pricecard status indicator is RED', () => {
+        cy.checkNewestProductStatus(false);
     });
 
     it('should create a new product', () => {
@@ -33,45 +39,26 @@ describe('pricing testing', () => {
 
         // Submit and assert
         cy.get('button.btn.btn-primary').click();
-        cy.assertResponse('@addProductStatic');
+        cy.assertResponse('@addProductStatic').wait(500);
     });
 
-    it('should check that both new products have red dots on the price card column', () => {
-        // Check the last products on the last page
-        cy.get('button[aria-label="Go to last page"]')
-            .should('be.visible')
-            .click()
-            .then(() => {
-                // Select the last two elements
-                // check their CSS properties
-                cy.get('i.fas.fa-circle').then(($elements) => {
-                    const lastTwoElements = $elements.slice(-2);
-                    cy.wrap(lastTwoElements).should('have.css', 'color', 'rgb(255, 0, 0)');
-                });
-            });
+    it('should check that pricecard status indicator is RED', () => {
+        cy.checkNewestProductStatus(false);
     });
 
-    it('should select one of the new products and create a default price fluid on it', () => {
+    it('should select new product and add a default product fluid', () => {
         cy.interceptApiCall('POST', 'ProductFluid/addProductFluid1*');
+        cy.interceptApiCall('GET', 'ProductFluid/showPage*');
 
-        cy.get('td[aria-colindex="2"][role="cell"]').contains('Cypress Carrier').click();
-        cy.wait(1000);
-        cy.get('button.btn.base-button.btn-outline-default').contains('Add').click();
+        // Select most recently added product
+        cy.getLastProductPage();
+        cy.get('tbody').children().last().find('td[aria-colindex="1"]').click();
+        cy.wait('@showPage*');
 
-        // Choose start and end dates
-        cy.handleDatePicker('label#example-datepicker__value_', '#timeExpires__value_');
-
-        // Fill out form
+        // Add price fluid
         cy.fixture('super-admin-v8').then((data) => {
             const pricing = data.product.pricing[0];
-            cy.handleDropdown('select#pricingPlanID', data.pricePlan.name);
-            cy.get('#planpricename').type(pricing.name);
-            cy.get('label[for="isDefault"]').click();
-
-            pricing.priceFluids.forEach((priceFluid, index) => {
-                cy.get(`#planAprice${index}`).type(priceFluid);
-            });
-            cy.get('button.btn.btn-primary').contains('Ok').click();
+            cy.addProductFluid(data.pricePlan.name, pricing, true);
         });
 
         // Assert
@@ -80,22 +67,11 @@ describe('pricing testing', () => {
 
     it('should add a second product fluid to that product', () => {
         cy.interceptApiCall('POST', 'ProductFluid/addProductFluid1*');
-        cy.get('button.btn.base-button.btn-outline-default').contains('Add').click();
 
-        // Choose start and end dates
-        cy.handleDatePicker('label#example-datepicker__value_', '#timeExpires__value_');
-
-        // Fill out form
+        // Add price fluid
         cy.fixture('super-admin-v8').then((data) => {
             const pricing = data.product.pricing[1];
-            cy.handleDropdown('select#pricingPlanID', data.pricePlan.name);
-            cy.get('#planpricename').type(pricing.name);
-            cy.get('label[for="isDefault"]').click();
-
-            pricing.priceFluids.forEach((priceFluid, index) => {
-                cy.get(`#planAprice${index}`).type(priceFluid);
-            });
-            cy.get('button.btn.btn-primary').contains('Ok').click();
+            cy.addProductFluid(data.pricePlan.name, pricing, false);
         });
 
         // Assert
