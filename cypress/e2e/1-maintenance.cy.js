@@ -64,7 +64,7 @@ describe('Maintenance', () => {
     it('should add preferences to OUs', () => {
         cy.intercept(
             'POST',
-            new RegExp(`${Cypress.env('BASE_URL')}/OrgPreferences/(addOUPreference|updateOUPreference)$`)
+            new RegExp(`^https?://${Cypress.env('BASE_URL')}/OrgPreferences/(addOUPreference|updateOUPreference)$`)
         ).as('manageOUPreference');
 
         // Select first OU
@@ -188,7 +188,7 @@ describe('Maintenance', () => {
         // Open upload store modal
         cy.get('div.card-header.text-center > div:nth-child(1) > div:nth-child(1) > div').click();
 
-        const filePath = 'cypress/assets/upload_stores.xslsx';
+        const filePath = 'cypress/assets/upload_stores.xlsx';
 
         // Add file to upload
         cy.get('label[for="importfile"]').selectFile(filePath);
@@ -200,8 +200,9 @@ describe('Maintenance', () => {
 
     it('should download stores from OU', () => {
         // Make sure intercept is using https
-        const adjustedUrl = Cypress.env('BASE_URL').replace('http:', 'https:');
-        cy.intercept('GET', `${adjustedUrl}/Store/export*`).as('export');
+        // const adjustedUrl = Cypress.env('BASE_URL').replace('http:', 'https:');
+        // cy.intercept('GET', `${adjustedUrl}/Store/export*`).as('export');
+        cy.interceptApiCall('GET', 'Store/export*');
 
         // Navigate to store page
         cy.login();
@@ -214,7 +215,7 @@ describe('Maintenance', () => {
 
         // Download and assert
         cy.contains('Download Stores').click();
-        cy.wait('@export').then(({ response }) => {
+        cy.wait('@export*').then(({ response }) => {
             expect(response.statusCode).to.eq(200);
         });
     });

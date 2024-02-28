@@ -99,7 +99,7 @@ Cypress.Commands.add('handleDropdown', (selector, value, expectedCount = null) =
 Cypress.Commands.add('interceptApiCall', (method, endpoint) => {
     const segments = endpoint.split('/');
     const alias = segments.pop();
-    cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(alias);
+    cy.intercept(method, `**://${Cypress.env('BASE_URL')}/${endpoint}`).as(alias);
 });
 
 /**
