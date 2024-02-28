@@ -4,10 +4,11 @@ describe('terms', () => {
         cy.loginAndNavigateToPage('terms');
 
         // open and fill out modal
-        cy.get('button.btn.base-button.btn-outline-default').click().click();
+        cy.get('button.btn.base-button.btn-outline-default').contains('Add').click().click();
+
         cy.fixture('super-admin-v8').then((data) => {
-            cy.handleDropdown('#term', data.term.aspectRatio);
-            cy.get("input#value").type('20:20');
+            cy.handleDropdown('#term', 'ar');
+            cy.get('input#value').type(data.term.ar);
         });
 
         // submit and assert
@@ -17,17 +18,16 @@ describe('terms', () => {
             expect(response.statusCode).to.eq(200);
             expect(body.error).to.eq(false);
         });
-    }); 
+    });
 
     it('should add a new mfg term', () => {
         cy.interceptApiCall('POST', 'Terms/addTerm');
-        cy.loginAndNavigateToPage('terms');
 
         // open and fill out modal
         cy.get('button.btn.base-button.btn-outline-default').click().click();
         cy.fixture('super-admin-v8').then((data) => {
-            cy.handleDropdown('#term', data.term.manufacturer);
-            cy.get("input#value").type('Cypress Manufacturer');
+            cy.handleDropdown('#term', 'mfg');
+            cy.get('input#value').type(data.term.mfg);
         });
 
         // submit and assert
@@ -37,17 +37,16 @@ describe('terms', () => {
             expect(response.statusCode).to.eq(200);
             expect(body.error).to.eq(false);
         });
-    }); 
+    });
 
     it('should add a new layout term', () => {
         cy.interceptApiCall('POST', 'Terms/addTerm');
-        cy.loginAndNavigateToPage('terms');
 
         // open and fill out modal
         cy.get('button.btn.base-button.btn-outline-default').click().click();
         cy.fixture('super-admin-v8').then((data) => {
-            cy.handleDropdown('#term', data.term.orientation);
-            cy.get("input#value").type('Cypress Test Layout');
+            cy.handleDropdown('#term', 'layout');
+            cy.get('input#value').type(data.term.layout);
         });
 
         // submit and assert
@@ -57,5 +56,5 @@ describe('terms', () => {
             expect(response.statusCode).to.eq(200);
             expect(body.error).to.eq(false);
         });
-    }); 
+    });
 });
