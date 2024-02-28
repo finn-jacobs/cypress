@@ -253,7 +253,7 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
  *
  * @param isActive | Boolean
  */
-Cypress.Commands.add('checkNewestProductStatus', (isActive) => {
+Cypress.Commands.add('checkProductStatus', (isActive) => {
     // Navigate to last page of product table
     cy.get('ul[aria-label="Pagination"]').then(($pagination) => {
         const $lastPageButton = $pagination.find('button[aria-label="Go to last page"]');
