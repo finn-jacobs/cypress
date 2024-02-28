@@ -1,7 +1,7 @@
 /**
- * Logs user into phoenix, then navigates to 
+ * Logs user into phoenix, then navigates to
  * designated page
- * 
+ *
  * @param route |  String
  */
 Cypress.Commands.add('loginAndNavigateToPage', (route) => {
@@ -13,7 +13,7 @@ Cypress.Commands.add('loginAndNavigateToPage', (route) => {
  * Logs user into phoenix, if user is already logged in,
  * visits the home page
  *
- * @param | none  
+ * @param | none
  */
 Cypress.Commands.add('login', () => {
     cy.visit(Cypress.env('BASE_URL')).wait(500);
@@ -257,11 +257,51 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
     // Select End Date
     cy.get(endDatePicker).then(($label) => {
         cy.wrap($label).click();
-            // Check if the months are different 
+        // Check if the months are different
         if (startDateMonth != EndDateMonth) {
             cy.get('button[aria-label="Next month"]').click();
         }
         cy.get(`[data-date="${endDate}"]`).click();
+    });
+});
+
+/**
+ * Opens add product pricing modal and creates a product fluid
+ *
+ * @param pricePlanName | String
+ * @param pricing | Object
+ * @param isDefault | Boolean
+ */
+Cypress.Commands.add('addProductFluid', (pricePlanName, pricing, isDefault = false) => {
+    // Open modal
+    cy.get('button.btn.base-button.btn-outline-default').contains('Add').click();
+
+    // Fill form
+    cy.handleDatePicker('label#example-datepicker__value_', '#timeExpires__value_');
+    cy.handleDropdown('select#pricingPlanID', pricePlanName);
+    cy.get('#planpricename').type(pricing.name);
+    if (isDefault) {
+        cy.get('label[for="isDefault"]').click();
+    }
+    pricing.priceFluids.forEach((priceFluid, index) => {
+        cy.get(`#planAprice${index}`).type(priceFluid);
+    });
+
+    // Submit
+    cy.get('button.btn.btn-primary').contains('Ok').click();
+});
+
+/**
+ * Checks product table for pagination and goes to last page
+ *
+ * @param | None
+ */
+Cypress.Commands.add('getLastProductPage', () => {
+    cy.get('ul[aria-label="Pagination"]').then(($pagination) => {
+        const $lastPageButton = $pagination.find('button[aria-label="Go to last page"]');
+        if ($lastPageButton.length) {
+            cy.wrap($lastPageButton).click().wait(500);
+        }
     });
 });
 
@@ -271,13 +311,7 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
  * @param isActive | Boolean
  */
 Cypress.Commands.add('checkNewestProductStatus', (isActive) => {
-    // Navigate to last page of product table
-    cy.get('ul[aria-label="Pagination"]').then(($pagination) => {
-        const $lastPageButton = $pagination.find('button[aria-label="Go to last page"]');
-        if ($lastPageButton.length) {
-            cy.wrap($lastPageButton).click();
-        }
-    });
+    cy.getLastProductPage();
 
     // Check indicator
     cy.get('tbody')

@@ -1,2 +1,4 @@
 node_modules/
 .env
+cypress/downloads
+.DS_Store

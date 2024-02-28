@@ -55,7 +55,7 @@
                 "priceFluids": ["$999.99", "$99.99", "10"]
             },
             {
-                "name2": "Cypress Price 2",
+                "name": "Cypress Price 2",
                 "priceFluids": ["$120.00", "$20.00", "10"]
             }
         ]
