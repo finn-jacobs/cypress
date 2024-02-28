@@ -1,9 +1,22 @@
 describe('pricing testing', () => {
+    it('should upload a file and a new product should be created', () => {
+        cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1');
+        cy.loginAndNavigateToPage('ProductStatic');
+
+        // Open Upload Product modal
+        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success').contains('Upload Product').click();
+
+        // Upload file
+        const filePath = 'cypress/assets/sample_product.xlsx';
+        cy.get('label[for="importfile"]').selectFile(filePath);
+
+        // Submit and assert
+        cy.get('button.btn.btn-primary').click();
+        cy.assertResponse('@uploadProduct1');
+    });
+
     it('should create a new product', () => {
         cy.interceptApiCall('POST', 'ProductStatic/addProductStatic');
-
-        cy.login();
-        cy.getPage('ProductStatic');
 
         // Press the 'Add' Button
         cy.get('button.btn.base-button.btn-outline-default').contains('Add').click().click();
@@ -21,21 +34,6 @@ describe('pricing testing', () => {
         // Submit and assert
         cy.get('button.btn.btn-primary').click();
         cy.assertResponse('@addProductStatic');
-    });
-
-    it('should upload a file and a new product should be created', () => {
-        cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1');
-
-        // Open Upload Product modal
-        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success').contains('Upload Product').click();
-
-        // Upload file
-        const filePath = 'cypress/assets/sample_product.xlsx';
-        cy.get('label[for="importfile"]').selectFile(filePath);
-
-        // Submit and assert
-        cy.get('button.btn.btn-primary').click();
-        cy.assertResponse('@uploadProduct1');
     });
 
     it('should check that both new products have red dots on the price card column', () => {
@@ -105,10 +103,7 @@ describe('pricing testing', () => {
     });
 
     it('should download all pricing', () => {
-        // Login and Navigate to Pricing
-        cy.login();
         cy.getPage('ProductStatic');
-
         cy.interceptApiCall('GET', 'Analytics/genratePriceList');
 
         // Trigger the download action
