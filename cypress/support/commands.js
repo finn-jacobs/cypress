@@ -87,7 +87,6 @@ Cypress.Commands.add('handleDropdown', (selector, value, expectedCount = null) =
  */
 Cypress.Commands.add('interceptApiCall', (method, endpoint) => {
     const segments = endpoint.split('/');
-    segments[1].replace('*', '');
     const alias = segments.pop();
     cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(alias);
 });
@@ -254,7 +253,7 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
  *
  * @param isActive | Boolean
  */
-Cypress.Commands.add('checkProductStatus', (isActive) => {
+Cypress.Commands.add('checkNewestProductStatus', (isActive) => {
     // Navigate to last page of product table
     cy.get('ul[aria-label="Pagination"]').then(($pagination) => {
         const $lastPageButton = $pagination.find('button[aria-label="Go to last page"]');
