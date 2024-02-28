@@ -2,12 +2,7 @@ describe('Maintenance', () => {
     // ends on carrier page
     it('should add a new carrier', () => {
         cy.interceptApiCall('POST', 'Carriers/add');
-
-        // Login to Phoenix
-        cy.login();
-
-        // Navigate to Carrier
-        cy.getPage('carrier');
+        cy.loginAndNavigateToPage('carrier');
 
         // Open add carrier modal
         cy.get('div.card-header > div > div.col-md-4 > div > button').click().click();

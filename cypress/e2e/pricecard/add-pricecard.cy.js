@@ -1,8 +1,7 @@
 describe('test', () => {
     it('should add a price card', () => {
         cy.interceptApiCall('POST', 'PriceCard/addPriceCard');
-        cy.login();
-        cy.getPage('Pricecard');
+        cy.loginAndNavigateToPage('Pricecard');
 
         // Open add price card modal
         cy.contains('Add').click().click();
