@@ -1,135 +1,122 @@
 describe('pricing testing', () => {
-    // TODO: Remove
-    // need this test in order to run the 'create new product test'
-    // it("should add a new carrier", () => {
-    //     // Login to Phoenix
-    //     cy.login();
+  it('should create a new product', () => {
+      cy.interceptApiCall('POST', 'ProductStatic/addProductStatic');
+      
+      cy.login();
+      cy.getPage('ProductStatic');
 
-    //     // Navigate to Carrier
-    //     cy.getPage('carrier');
+      // Press the 'Add' Button
+      cy.get('button.btn.base-button.btn-outline-default')
+          .contains('Add')
+          .click().click();
 
-    //     // Open add carrier modal
-    //     cy.get('div.card-header > div > div.col-md-4 > div > button').click().click();
+      // Open 'Add Product' Modal and fill out all fields
+      cy.fixture('super-admin-v8').then(data => {
+          cy.handleDropdown('#idcarrier', data.carrier.name);
+          cy.handleDropdown('#aspectRatiAddEditModalo', data.product.ar);
+          cy.handleDropdown('#mfg.custom-select.custom-select-sm', data.product.mfg);
+          cy.get('#productName').type(data.product.name);
+          cy.get('#mdescLong').type(data.product.meta);
+          cy.get('#sku').type(data.product.sku);
+      });
 
-    //     // Fill form and submit
-    //     cy.fixture('super-admin-v8').then(data => {
-    //         cy.get('#term-group-1 > div > #value').type(data.carrier.name);
-    //         cy.get('#value-group-1 > div > #value').type(data.carrier.description);
-    //     });
-    //     cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
-    // });
+      // Submit and assert
+      cy.get('button.btn.btn-primary').click()
+      cy.assertResponse('@addProductStatic');
+  });
 
-    it('should create a new product', () => {
-        cy.interceptApiCall('POST', 'ProductStatic/addProductStatic');
-        cy.login();
+  it('should upload a file and a new product should be created', () => {
+      cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1')
+      
+      // Open Upload Product modal
+      cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success')
+          .contains('Upload Product')
+          .click();
 
-        // Navigate to Product Static
-        cy.getPage('ProductStatic');
+      // Upload file
+      const filePath = 'cypress/assets/sample_product.xlsx';
+      cy.get('label[for="importfile"]').selectFile(filePath);
 
-        // Press the 'Add' Button
-        cy.get('button.btn.base-button.btn-outline-default').contains('Add').click().click();
+      // Submit and assert
+      cy.get('button.btn.btn-primary').click();
+      cy.assertResponse('@uploadProduct1');
+  });
 
-        // Open 'Add Product' Modal and fill out all fields
-        cy.fixture('super-admin-v8').then((data) => {
-            cy.handleDropdown('#idcarrier', data.carrier.name);
-            cy.handleDropdown('#aspectRatiAddEditModalo', data.product.ar);
-            cy.handleDropdown('#mfg.custom-select.custom-select-sm', data.product.mfg);
-            cy.get('#productName').type(data.product.name);
-            cy.get('#mdescLong').type(data.product.meta);
-            cy.get('#sku').type(data.product.sku);
-        });
-
-        // Submit and assert
-        cy.get('button.btn.btn-primary').click();
-        cy.wait('@addProductStatic').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
-    });
-
-    it('should upload a file and a new product should be created', () => {
-        cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1');
-        cy.login();
-
-        // Navigate to Product Static
-        cy.getPage('ProductStatic');
-
-        // Open Upload Product modal
-        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success').contains('Upload Product').click();
-
-        // Upload file
-        const filePath = './assets/sample_product.xlsx';
-        cy.get('label[for="importfile"]').selectFile(filePath);
-
-        // Submit and assert
-        cy.get('button.btn.btn-primary').click();
-        cy.wait('@uploadProduct1').then(({ response }) => {
-            const body = JSON.parse(response.body);
-            expect(response.statusCode).to.eq(200);
-            expect(body.error).to.eq(false);
-        });
-    });
-
-    it('should check that both new products have red dots on the price card column', () => {
-        // Login to Phoenix
-        cy.login();
-
-        // Navigate to Pricing Page
-        cy.getPage('ProductStatic');
-
+  it('should check that both new products have red dots on the price card column', () => {
+      // Check the last products on the last page
+      cy.get('button[aria-label="Go to last page"]').should('be.visible').click()
+        .then(() => {
         // Select the last two elements
         // check their CSS properties
-        cy.get('i.fas.fa-circle').then(($elements) => {
+        cy.get('i.fas.fa-circle').then($elements => {
             const lastTwoElements = $elements.slice(-2);
             cy.wrap(lastTwoElements).should('have.css', 'color', 'rgb(255, 0, 0)');
         });
-    });
+      });
+  });
 
-    /**
-     *
-     * TODO: current method for setting date pickers does not work
-     *
-     */
-    it('should select one of the new products and create a default price fluid on it', () => {
-        cy.login();
-        cy.getPage('ProductStatic');
+  it('should select one of the new products and create a default price fluid on it', () => {
+    cy.interceptApiCall('POST', 'ProductFluid/addProductFluid1*');
 
-        cy.get('td[aria-colindex="2"][role="cell"]').contains('Cypress Carrier').click();
-        cy.wait(1000);
-        cy.get('button.btn.base-button.btn-outline-default').contains('Add').click();
+    cy.get('td[aria-colindex="2"][role="cell"]').contains('Cypress Carrier').click();
+    cy.wait(1000)
+    cy.get('button.btn.base-button.btn-outline-default').contains('Add').click();
+    
+    // Choose start and end dates
+    cy.handleDatePicker('label#example-datepicker__value_', '#timeExpires__value_');
 
-        cy.handleDatePicker('label#example-datepicker__value_', '#timeExpires__value_');
-
-        // Fill form
-        cy.fixture('super-admin-v8').then((data) => {
-            cy.handleDropdown('#pricingPlanID', data.pricePlan.name);
-            cy.get('#planpricename').type(data.product.pricing.name);
-            cy.get('label[for="isDefault"]').click();
-
-            data.product.pricing.priceFluids.forEach((priceFluid, index) => {
-                cy.get(`#planAprice${index}`).type(priceFluid);
-            });
+    // Fill out form        
+    cy.fixture('super-admin-v8').then(data => {
+        cy.handleDropdown('select#pricingPlanID', data.pricePlan.name);
+        cy.get('#planpricename').type(data.product.pricing.name);
+        cy.get('label[for="isDefault"]').click();
+      
+        data.product.pricing.priceFluids[0].forEach((priceFluid, index) => {
+            cy.get(`#planAprice${index}`).type(priceFluid);
         });
+        cy.get('button.btn.btn-primary').contains('Ok').click()
     });
 
-    it('should download all pricing', () => {
-        cy.login();
+    // Assert
+    cy.assertResponse('@addProductFluid1*');
+  });
 
-        // Navigate to
-        cy.getPage('ProductStatic');
+  it('should add a second product fluid to that product', () => {
+    cy.interceptApiCall('POST', 'ProductFluid/addProductFluid1*');
+    cy.get('button.btn.base-button.btn-outline-default').contains('Add').click();
 
-        cy.intercept('GET', `${Cypress.env('BASE_URL')}/Analytics/genratePriceList`).as('downloadRequest');
+    // Choose start and end dates
+    cy.handleDatePicker('label#example-datepicker__value_', '#timeExpires__value_');
 
-        // Trigger the download action (e.g., clicking a download button)
-        cy.get(`a[href="${Cypress.env('BASE_URL')}/Analytics/genratePriceList"]`).click();
-
-        // Wait for the download request to complete
-        cy.wait('@downloadRequest').then((interception) => {
-            expect(interception.response.statusCode).to.equal(200); // Check if the response status code is 200 (OK)
-
-            // TODO Neka look back into this
-            cy.log(interception.response);
+    // Fill out form        
+    cy.fixture('super-admin-v8').then(data => {
+        cy.handleDropdown('select#pricingPlanID', data.pricePlan.name);
+        cy.get('#planpricename').type(data.product.pricing.name2);
+        cy.get('label[for="isDefault"]').click();
+        
+        data.product.pricing.priceFluids[1].forEach((priceFluid, index) => {
+            cy.get(`#planAprice${index}`).type(priceFluid);
         });
+        cy.get('button.btn.btn-primary').contains('Ok').click()
     });
-});
+    
+    // Assert 
+    cy.assertResponse('@addProductFluid1*');
+  });
+
+  it('should download all pricing', () => {
+       // Login and Navigate to Pricing
+      cy.login();
+      cy.getPage('ProductStatic');
+
+      cy.interceptApiCall('GET', 'Analytics/genratePriceList');
+
+      // Trigger the download action 
+      cy.get(`a[href="${(Cypress.env('BASE_URL'))}Analytics/genratePriceList"]`).click()
+      
+      // Assert
+      cy.wait('@genratePriceList').then(({response}) => {
+        expect(response.statusCode).to.eq(200);
+      });
+  });
+})

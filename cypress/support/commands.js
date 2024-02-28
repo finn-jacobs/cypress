@@ -87,6 +87,7 @@ Cypress.Commands.add('handleDropdown', (selector, value, expectedCount = null) =
  */
 Cypress.Commands.add('interceptApiCall', (method, endpoint) => {
     const segments = endpoint.split('/');
+    segments[1].replace('*', '')
     const alias = segments.pop();
     cy.intercept(method, `${Cypress.env('BASE_URL')}/${endpoint}`).as(alias);
 });
@@ -231,7 +232,7 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
         day: '2-digit',
     };
     const _date = new Date();
-    _date.setDate(_date.getDate() + 2);
+    _date.setDate(_date.getDate() + 4);
     const endDate = _date.toLocaleDateString('en-CA', options);
     const startDate = new Date().toLocaleDateString('en-CA', options);
 
