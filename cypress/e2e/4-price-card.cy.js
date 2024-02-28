@@ -24,4 +24,9 @@ describe('test', () => {
         cy.get('#modal-add___BV_modal_footer_ > button.btn-primary').click();
         cy.assertResponse('@addPriceCard');
     });
+
+    it('should verify product now has GREEN status for pricecard', () => {
+        cy.getPage('ProductStatic');
+        cy.checkNewestProductStatus(true);
+    });
 });
