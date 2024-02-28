@@ -1,9 +1,7 @@
 describe('pricing testing', () => {
-  it('should create a new product', () => {
-      cy.interceptApiCall('POST', 'ProductStatic/addProductStatic');
-      
-      cy.login();
-      cy.getPage('ProductStatic');
+    it('should create a new product', () => {
+        cy.interceptApiCall('POST', 'ProductStatic/addProductStatic');
+        cy.loginAndNavigateToPage('ProductStatic');
 
       // Press the 'Add' Button
       cy.get('button.btn.base-button.btn-outline-default')
@@ -25,13 +23,11 @@ describe('pricing testing', () => {
       cy.assertResponse('@addProductStatic');
   });
 
-  it('should upload a file and a new product should be created', () => {
-      cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1')
-      
-      // Open Upload Product modal
-      cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success')
-          .contains('Upload Product')
-          .click();
+    it('should upload a file and a new product should be created', () => {
+        cy.interceptApiCall('POST', 'ProductStatic/uploadProduct1');
+
+        // Open Upload Product modal
+        cy.get('button.btn.base-button.mr-1.btn-upload.btn-outline-success').contains('Upload Product').click();
 
       // Upload file
       const filePath = 'cypress/assets/sample_product.xlsx';
@@ -105,18 +101,15 @@ describe('pricing testing', () => {
   });
 
   it('should download all pricing', () => {
-       // Login and Navigate to Pricing
-      cy.login();
-      cy.getPage('ProductStatic');
+    cy.getPage('ProductStatic')
+    cy.interceptApiCall('GET', 'Analytics/genratePriceList');
 
-      cy.interceptApiCall('GET', 'Analytics/genratePriceList');
-
-      // Trigger the download action 
-      cy.get(`a[href="${(Cypress.env('BASE_URL'))}Analytics/genratePriceList"]`).click()
-      
-      // Assert
-      cy.wait('@genratePriceList').then(({response}) => {
-        expect(response.statusCode).to.eq(200);
-      });
+    // Trigger the download action 
+    cy.get(`a[href="${(Cypress.env('BASE_URL'))}Analytics/genratePriceList"]`).click()
+    
+    // Assert
+    cy.wait('@genratePriceList').then(({response}) => {
+    expect(response.statusCode).to.eq(200);
+    });
   });
 })
