@@ -1,8 +1,19 @@
 /**
+ * Logs user into phoenix, then navigates to 
+ * designated page
+ * 
+ * @param route |  String
+ */
+Cypress.Commands.add('loginAndNavigateToPage', (route) => {
+    cy.login();
+    cy.getPage(route);
+});
+
+/**
  * Logs user into phoenix, if user is already logged in,
  * visits the home page
  *
- * @param | None
+ * @param | none  
  */
 Cypress.Commands.add('login', () => {
     cy.visit(Cypress.env('BASE_URL')).wait(500);
@@ -234,6 +245,8 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
     _date.setDate(_date.getDate() + 4);
     const endDate = _date.toLocaleDateString('en-CA', options);
     const startDate = new Date().toLocaleDateString('en-CA', options);
+    const startDateMonth = startDate.split('-')[1];
+    const EndDateMonth = endDate.split('-')[1];
 
     // Select Start Date
     cy.get(startDatePicker).then(($label) => {
@@ -244,6 +257,10 @@ Cypress.Commands.add('handleDatePicker', (startDatePicker, endDatePicker) => {
     // Select End Date
     cy.get(endDatePicker).then(($label) => {
         cy.wrap($label).click();
+            // Check if the months are different 
+        if (startDateMonth != EndDateMonth) {
+            cy.get('button[aria-label="Next month"]').click();
+        }
         cy.get(`[data-date="${endDate}"]`).click();
     });
 });
