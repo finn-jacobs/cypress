@@ -67,8 +67,8 @@
         "orientation": "Portrait"
     },
     "term": {
-        "aspectRatio": "ar",
-        "orientation": "layout",
-        "manufacturer": "mfg"
+        "ar": "20:20",
+        "mfg": "Cypress Test Layout",
+        "layout": "Cypress Test Layout"
     }
 }
