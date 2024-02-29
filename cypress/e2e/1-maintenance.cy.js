@@ -21,9 +21,11 @@ describe('Maintenance', () => {
     // ends on price plan page
     it('should create a new price plan', () => {
         cy.interceptApiCall('POST', 'PricePlan/addPricingPlan');
+        cy.interceptApiCall('GET', 'PricePlan/showPage*');
 
         // Navigate to Price Plans
         cy.getPage('Priceplan');
+        cy.wait('@showPage*');
 
         // Open add price plan modal
         cy.get('.card-header.text-center > div > div:nth-child(3) > div > button').click().click();
@@ -134,12 +136,14 @@ describe('Maintenance', () => {
 
     it('should create a user under Cypress Org', () => {
         cy.interceptApiCall('POST', 'Users/addUser');
+        cy.interceptApiCall('GET', 'Users/showPage*');
 
         // Navigate to users
         cy.getPage('userlist');
+        cy.wait('@showPage*');
 
         // Open add user modal
-        cy.get('div.card-header.text-center > div > div.col-md-5.center-content.align-right > div > button').click();
+        cy.contains('button', 'Add').click();
 
         // Add timestamp to email for new user
         const email = generateUniqueEmail(Cypress.env('NEW_USER_EMAIL'));
@@ -199,9 +203,6 @@ describe('Maintenance', () => {
     });
 
     it('should download stores from OU', () => {
-        // Make sure intercept is using https
-        // const adjustedUrl = Cypress.env('BASE_URL').replace('http:', 'https:');
-        // cy.intercept('GET', `${adjustedUrl}/Store/export*`).as('export');
         cy.interceptApiCall('GET', 'Store/export*');
 
         // Navigate to store page
